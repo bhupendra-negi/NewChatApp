@@ -6,7 +6,9 @@ var app = express(),
   session = require("express-session"),
   config = require("./config/config.js"),
   connectMongo = require("connect-mongo")(session),
-  mongoose = require('mongoose');
+  mongoose = require('mongoose'),
+  passport = require('passport'),
+  facebookStrategy = require('passport-facebook').Strategy ;
 // tell express where views are
 app.set("views", path.join(__dirname, "views"));
 // set html as templating
@@ -21,7 +23,6 @@ mongoose.connect(config.dbUrl, function(err) {
   } else {
     console.log("MONGOOSE-CONNECT: Database connection established");
     // listen to port when connection ok to mongo lab
-
   }
 });
 
@@ -50,14 +51,39 @@ if (mode === "development") {
   app.use(session({
     secret: config.sessionSecret,
     store: new connectMongo({
-      url: config.dbUrl,
+      url: config.dbUrl, // this is commented bcoz mongoose already making a connection
       mongoose_connection: mongoose.connections[0],
       stringify: true
     })
   }));
 
 }
+// try for the schema
+// testing mongoose connections
+/*
+var userSchema = mongoose.Schema({
+  username:String,
+  password:String,
+  email:String
+})
+// creating model from schema which acts as collection in db
+var User = mongoose.model("users",userSchema);
 
+var Ram = new User({
+  username:"Ram",
+  password:"secretpassword",
+  email:"abc@gmail.com"
+});
+
+Ram.save(function(err){
+  console.log("Data saved !");
+})
+
+*/
+
+
+// mpved to modules.js
+/*
 app.route('/').get(function(req, res, next) {
   //res.send("<h1> Hello World <h1>");
   res.render("index", {
@@ -65,8 +91,15 @@ app.route('/').get(function(req, res, next) {
   });
 
 });
+*/
 
-require('./modules/modules.js')(express, app);
+// call module of passport auth
+
+app.use(passport.initialize());
+app.use(passport.session());
+require('./auth/passportAuth.js')(passport,facebookStrategy,config,mongoose);
+
+require('./modules/modules.js')(express, app, passport);
 app.listen(PORT, function() {
   console.log("server started at port 3000");
   console.log(mode);

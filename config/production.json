@@ -1,4 +1,9 @@
 {
   "dbUrl":"mongodb://bhupi:bhupi@ds011820.mlab.com:11820/chatapp",
-  "sessionSecret":"mysecretkeyforsession"
+  "sessionSecret":"mysecretkeyforsession",
+  "fb" : {
+    "appID": "821028548001721" ,
+    "appSecret":"a88f9a642e73af5569dfa953435b7099" ,
+    "callbackURL":"http://localhost:3000/auth/facebook/callback"
+  }
 }

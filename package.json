@@ -14,6 +14,8 @@
     "express": "^4.2.0",
     "express-session": "^1.2.0",
     "hogan-express": "^0.5.2",
-    "mongoose": "^4.4.10"
+    "mongoose": "^4.4.10",
+    "passport": "^0.2.0",
+    "passport-facebook": "^1.0.3"
   }
 }
